@@ -1,0 +1,39 @@
+.date-today {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px;
+  margin-left: auto;
+}
+
+.weekday {
+  color: var(--color-accent);
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.full-date {
+  color: #000;
+  font-size: 18px;
+  font-weight: 400;
+  align-self: self-start;
+}
+
+@media (max-width: 720px) {
+  .full-date {
+    font-size: 16px;
+  }
+
+  .weekday {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .full-date {
+    font-size: 15px;
+  }
+
+  .weekday {
+    font-size: 13px;
+  }
+}
