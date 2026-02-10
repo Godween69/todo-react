@@ -4,7 +4,7 @@ import DateToday from "./components/date_today/date_today.jsx";
 import TaskInput from "./components/task_input/task_input.jsx";
 import TaskList from "./components/task_list/task_list.jsx";
 import TaskSummary from "./components/task_summary/task_summary.jsx";
-import TaskFilters from "./components/task_filters/task_filters.jsx"; // ← новый импорт
+import TaskFilters from "./components/task_filters/task_filters.jsx";
 import Logo from "./components/logo/logo.jsx";
 import DateNavigator from "./components/date_navigator/date_navigator.jsx";
 
@@ -63,6 +63,7 @@ function App() {
       isDone: false,
       priority: "medium",
       createdAt: new Date().toISOString(),
+      scope: "local", // ← обязательно для toggle
     };
 
     if (currentDate < todayStr) {
@@ -76,7 +77,7 @@ function App() {
   const toggleTask = (id) => {
     setTasksForCurrentDate((prev) => {
       const updated = prev.map((t) =>
-        t.id === id ? { ...t, isDone: !t.isDone } : t,
+        t.id === id ? { ...t, isDone: !t.isDone } : t
       );
       const active = updated.filter((t) => !t.isDone);
       const completed = updated.filter((t) => t.isDone);
@@ -91,13 +92,24 @@ function App() {
   const editTask = (id, newText) => {
     if (!newText.trim()) return;
     setTasksForCurrentDate((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, text: newText.trim() } : t)),
+      prev.map((t) => (t.id === id ? { ...t, text: newText.trim() } : t))
     );
   };
 
   const changePriority = (id, newPriority) => {
     setTasksForCurrentDate((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, priority: newPriority } : t)),
+      prev.map((t) => (t.id === id ? { ...t, priority: newPriority } : t))
+    );
+  };
+
+  // ← НОВОЕ: переключатель Global/Local
+  const toggleScope = (id) => {
+    setTasksForCurrentDate((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? { ...t, scope: t.scope === "global" ? "local" : "global" }
+          : t
+      )
     );
   };
 
@@ -112,22 +124,16 @@ function App() {
   const currentTasks = getTasksForCurrentDate();
   const isPast = currentDate < todayStr;
 
-  // Фильтрация
   const filteredTasks = currentTasks.filter((t) => {
     if (filter === "active") return !t.isDone;
     if (filter === "completed") return t.isDone;
     return true;
   });
 
-  // Сортировка: сначала активные (по приоритету), потом выполненные
   const sortedTasks = [...filteredTasks].sort((a, b) => {
-    if (a.isDone !== b.isDone) {
-      return a.isDone ? 1 : -1;
-    }
+    if (a.isDone !== b.isDone) return a.isDone ? 1 : -1;
     const prioOrder = { high: 0, medium: 1, low: 2 };
-    const prioA = prioOrder[a.priority] ?? 1;
-    const prioB = prioOrder[b.priority] ?? 1;
-    return prioA - prioB;
+    return (prioOrder[a.priority] ?? 1) - (prioOrder[b.priority] ?? 1);
   });
 
   const total = currentTasks.length;
@@ -191,6 +197,7 @@ function App() {
           onDelete={deleteTask}
           onEdit={editTask}
           onChangePriority={changePriority}
+          onToggleScope={toggleScope} // ← прокидываем toggle
           isPast={isPast}
         />
       </section>

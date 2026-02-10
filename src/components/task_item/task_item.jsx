@@ -1,4 +1,4 @@
-import { useState } from "react";  // ← обязательно добавить!
+import { useState } from "react";
 import "./task_item.css";
 
 export default function TaskItem({
@@ -7,12 +7,15 @@ export default function TaskItem({
   onDelete,
   onEdit,
   onChangePriority,
+  onToggleScope,
   isEditing,
   onEditStart,
   onEditCancel,
   isPast = false,
 }) {
-  const [editText, setEditText] = useState(task.text);
+  if (!task) return null; // ← безопасная проверка
+
+  const [editText, setEditText] = useState(task.text || "");
 
   const handleSave = () => {
     const trimmed = editText.trim();
@@ -28,10 +31,11 @@ export default function TaskItem({
     if (e.key === "Escape") onEditCancel();
   };
 
-  // Выполненная задача или прошлый день → только просмотр
+  const taskClass = `task-item ${task.isDone ? "done" : ""} ${isPast ? "inactive" : ""} ${task.scope === "global" ? "global-task" : ""}`;
+
   if (task.isDone || isPast) {
     return (
-      <div className={`task-item ${task.isDone ? "done" : ""} ${isPast ? "inactive" : ""}`}>
+      <div className={taskClass}>
         <div className="priority-dot gray"></div>
         <span className="task-text">{task.text}</span>
       </div>
@@ -39,7 +43,7 @@ export default function TaskItem({
   }
 
   return (
-    <div className="task-item">
+    <div className={taskClass}>
       {isEditing ? (
         <div className="edit-mode">
           <input
@@ -61,11 +65,25 @@ export default function TaskItem({
         </div>
       ) : (
         <div className="view-mode">
-          <div className={`priority-dot ${task.priority || "medium"}`}></div>
+          {/* Toggle Switch */}
+          <div className="switch-wrapper">
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={task.scope === "global"}
+                onChange={() => onToggleScope(task.id)}
+              />
+              <span className="slider"></span>
+            </label>
+            <span className="switch-label">
+              {task.scope === "global" ? "Global" : "Local"}
+            </span>
+          </div>
 
           <span className="task-text" onDoubleClick={onEditStart}>
             {task.text}
           </span>
+          <div className={`priority-dot ${task.priority || "medium"}`}></div>
 
           <div className="priority-selector">
             <select
@@ -77,6 +95,7 @@ export default function TaskItem({
               <option value="high">Высокий</option>
             </select>
           </div>
+
 
           <div className="actions">
             <button

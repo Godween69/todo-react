@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TaskItem from "../task_item/task_item.jsx";
+import "../task_item/task_item.css"; // ← путь к CSS task_item
 
 export default function TaskList({
   tasks,
@@ -7,6 +8,7 @@ export default function TaskList({
   onDelete,
   onEdit,
   onChangePriority,
+  onToggleScope, // ← получаем прокиданный toggle
   isPast = false,
 }) {
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -36,6 +38,7 @@ export default function TaskList({
             setEditingTaskId(null);
           }}
           onChangePriority={onChangePriority}
+          onToggleScope={onToggleScope} // ← передаем toggle
           isEditing={editingTaskId === task.id}
           onEditStart={() => setEditingTaskId(task.id)}
           onEditCancel={() => setEditingTaskId(null)}
