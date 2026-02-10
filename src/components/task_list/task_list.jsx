@@ -15,11 +15,13 @@ export default function TaskList({
   const safeTasks = Array.isArray(tasks) ? tasks : [];
   const completedCount = safeTasks.filter((t) => t.isDone).length;
   const firstCompletedIndex = safeTasks.findIndex((t) => t.isDone);
+  const listBase =
+    "mx-auto w-full max-w-[600px] rounded-lg py-5 min-h-[160px] max-[720px]:py-3 max-[480px]:min-h-[120px]";
 
   if (safeTasks.length === 0) {
     return (
-      <div className="task-list">
-        <p className="empty-message">
+      <div className={`${listBase} flex items-center justify-center`}>
+        <p className="m-0 px-5 py-10 text-center italic text-zinc-400">
           {isPast ? "Задач не было..." : "Пока задач нет..."}
         </p>
       </div>
@@ -27,11 +29,11 @@ export default function TaskList({
   }
 
   return (
-    <div className="task-list">
+    <div className={`${listBase} flex flex-col`}>
       {safeTasks.map((task, idx) => (
         <Fragment key={task.id}>
           {completedCount > 0 && idx === firstCompletedIndex && (
-            <div className="completed-label">
+            <div className="my-3 rounded-lg bg-zinc-100/70 px-3 py-2 text-center text-[1.1rem] font-medium text-zinc-600 max-[720px]:my-2 max-[480px]:text-[1rem]">
               Выполнено: {completedCount}
             </div>
           )}

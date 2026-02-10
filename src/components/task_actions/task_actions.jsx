@@ -1,5 +1,3 @@
-import "./task_actions.css";
-
 export default function TaskActions({
   onToggle,
   onDelete,
@@ -10,9 +8,9 @@ export default function TaskActions({
   if (isEditing) return null;
 
   return (
-    <div className="task-actions">
+    <div className="flex items-center gap-2">
       <button
-        className="complete-btn"
+        className="btn-solid btn-solid-success max-[720px]:px-2.5 max-[720px]:py-1 max-[720px]:text-[0.85rem]"
         onClick={onToggle}
         title="Отметить как выполненную"
       >
@@ -20,7 +18,7 @@ export default function TaskActions({
       </button>
 
       <button
-        className="delete-btn"
+        className="btn-solid btn-solid-danger btn-solid-icon max-[720px]:h-7 max-[720px]:w-7 max-[720px]:text-[1.1rem]"
         onClick={onDelete}
         title="Удалить задачу"
       >

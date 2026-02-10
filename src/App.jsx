@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./App.css";
+import headerImage from "./assets/header.png";
 import DateToday from "./components/date_today/date_today.jsx";
 import Clock from "./components/clock/clock.jsx";
 import TaskInput from "./components/task_input/task_input.jsx";
@@ -147,58 +147,70 @@ function App() {
   const remaining = total - done;
 
   return (
-    <div className="App">
-      <header className="logo-header">
-        <div className="header-top-row">
-          <div className="left-part">
-            <Logo size={56} color="#808080" />
-            <div className="slogan-box">
-              <h1>TODO</h1>
-              <span className="slogan">И твои планы под контролем!</span>
+    <div className="mx-auto mt-4 max-w-[680px] px-3 max-[720px]:mt-0 max-[720px]:px-0">
+      <div className="rounded-[26px] bg-gradient-to-br from-white/80 via-sky-100/70 to-amber-100/70 p-[1px] shadow-[0_30px_70px_-35px_rgba(15,23,42,0.45)] ring-1 ring-white/70 max-[720px]:rounded-none">
+        <div className="min-h-[calc(100vh-1rem)] overflow-hidden rounded-[25px] bg-white/80 text-[22px] text-zinc-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] backdrop-blur-sm max-[720px]:min-h-screen max-[720px]:rounded-none max-[720px]:bg-white/90 max-[720px]:text-[16px] max-[480px]:text-[15px] motion-safe:animate-rise">
+          <header
+            className="flex min-h-[180px] flex-col bg-cover bg-center px-6 py-4 pb-3 max-[720px]:min-h-[160px] max-[720px]:px-4 max-[720px]:py-3 max-[480px]:p-3 motion-safe:animate-rise-delayed"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.5)), url(${headerImage})`,
+            }}
+          >
+            <div className="flex w-full items-start justify-between max-[720px]:flex-col max-[720px]:items-start max-[720px]:gap-3">
+              <div className="flex items-center">
+                <Logo size={56} color="#808080" />
+                <div className="ml-1 grid">
+                  <h1 className="text-[30px] font-extrabold tracking-[0.04em] text-zinc-700 drop-shadow-[0_3px_10px_rgba(0,0,0,0.18)] max-[720px]:text-[25px] max-[480px]:text-[23px]">
+                    TODO
+                  </h1>
+                  <span className="ml-[23px] mt-[-6px] text-[13px] italic text-zinc-600 max-[720px]:ml-3 max-[480px]:text-[12px]">
+                    И твои планы под контролем!
+                  </span>
+                </div>
+              </div>
+              <Clock />
+              <div className="flex flex-col items-end gap-1 max-[720px]:hidden">
+                <DateToday dateStr={currentDate} />
+                <DateNavigator onChangeDate={changeDate} onGoToToday={goToToday} />
+              </div>
             </div>
-          </div>
-          <Clock />
+          </header>
 
-          <div className="right-part">
+          <div className="hidden flex-col items-start gap-1.5 px-5 pb-2 pt-2 max-[720px]:flex max-[720px]:px-3">
             <DateToday dateStr={currentDate} />
             <DateNavigator onChangeDate={changeDate} onGoToToday={goToToday} />
           </div>
-        </div>
-      </header>
 
-      <div className="date-block-mobile">
-        <DateToday dateStr={currentDate} />
-        <DateNavigator onChangeDate={changeDate} onGoToToday={goToToday} />
+          <section className="motion-safe:animate-rise-delayed">
+            {isPast ? (
+              <p className="mx-5 rounded-lg bg-zinc-100 px-4 py-5 text-center italic text-zinc-500 max-[480px]:mx-3">
+                Это прошлый день — добавление задач невозможно
+              </p>
+            ) : (
+              <TaskInput onAddTask={addTask} />
+            )}
+          </section>
+
+          <section className="px-2 pb-6 motion-safe:animate-rise-delayed">
+            <div className="my-4">
+              <TaskSummary total={total} done={done} remaining={remaining} />
+              {!isPast && (
+                <TaskFilters currentFilter={filter} onFilterChange={setFilter} />
+              )}
+            </div>
+
+            <TaskList
+              tasks={sortedTasks}
+              onToggle={toggleTask}
+              onDelete={deleteTask}
+              onEdit={editTask}
+              onChangePriority={changePriority}
+              onToggleScope={toggleScope}
+              isPast={isPast}
+            />
+          </section>
+        </div>
       </div>
-
-      <section className="input-section">
-        {isPast ? (
-          <p className="past-notice">
-            Это прошлый день — добавление задач невозможно
-          </p>
-        ) : (
-          <TaskInput onAddTask={addTask} />
-        )}
-      </section>
-
-      <section className="task-list-section">
-        <div className="tasks-header">
-          <TaskSummary total={total} done={done} remaining={remaining} />
-          {!isPast && (
-            <TaskFilters currentFilter={filter} onFilterChange={setFilter} />
-          )}
-        </div>
-
-        <TaskList
-          tasks={sortedTasks}
-          onToggle={toggleTask}
-          onDelete={deleteTask}
-          onEdit={editTask}
-          onChangePriority={changePriority}
-          onToggleScope={toggleScope}
-          isPast={isPast}
-        />
-      </section>
     </div>
   );
 }

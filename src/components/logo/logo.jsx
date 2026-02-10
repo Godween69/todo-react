@@ -1,4 +1,3 @@
-import "./logo.css";
 function Logo({ size = 48, color = "#000" }) {
   return (
     <svg
