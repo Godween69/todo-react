@@ -1,6 +1,6 @@
 import "./date_navigator.css";
 
-export default function DateNavigator({ currentDate, onChangeDate, onGoToToday }) {
+export default function DateNavigator({ onChangeDate, onGoToToday }) {
   return (
     <div className="date-nav">
       <button onClick={() => onChangeDate(-1)}>←</button>

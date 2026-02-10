@@ -47,7 +47,9 @@ function App() {
 
   const setTasksForCurrentDate = (updater) => {
     setTasksByDate((prev) => {
-      const currentTasks = getTasksForCurrentDate();
+      const currentTasks = Array.isArray(prev[currentDate])
+        ? prev[currentDate]
+        : [];
       const newTasks =
         typeof updater === "function" ? updater(currentTasks) : updater;
       return { ...prev, [currentDate]: newTasks };
@@ -63,7 +65,8 @@ function App() {
       isDone: false,
       priority: "medium",
       createdAt: new Date().toISOString(),
-      scope: "local", // ← обязательно для toggle
+      completedAt: null, // добавляем поле для времени завершения
+      scope: "local",
     };
 
     if (currentDate < todayStr) {
@@ -75,14 +78,17 @@ function App() {
   };
 
   const toggleTask = (id) => {
-    setTasksForCurrentDate((prev) => {
-      const updated = prev.map((t) =>
-        t.id === id ? { ...t, isDone: !t.isDone } : t
-      );
-      const active = updated.filter((t) => !t.isDone);
-      const completed = updated.filter((t) => t.isDone);
-      return [...active, ...completed];
-    });
+    setTasksForCurrentDate((prev) =>
+      prev.map((t) => {
+        if (t.id !== id) return t;
+        const isNowDone = !t.isDone;
+        return {
+          ...t,
+          isDone: isNowDone,
+          completedAt: isNowDone ? new Date().toISOString() : null,
+        };
+      })
+    );
   };
 
   const deleteTask = (id) => {
@@ -102,7 +108,6 @@ function App() {
     );
   };
 
-  // ← НОВОЕ: переключатель Global/Local
   const toggleScope = (id) => {
     setTasksForCurrentDate((prev) =>
       prev.map((t) =>
@@ -155,7 +160,6 @@ function App() {
           <div className="right-part">
             <DateToday dateStr={currentDate} />
             <DateNavigator
-              currentDate={currentDate}
               onChangeDate={changeDate}
               onGoToToday={goToToday}
             />
@@ -166,7 +170,6 @@ function App() {
       <div className="date-block-mobile">
         <DateToday dateStr={currentDate} />
         <DateNavigator
-          currentDate={currentDate}
           onChangeDate={changeDate}
           onGoToToday={goToToday}
         />
@@ -185,7 +188,6 @@ function App() {
       <section className="task-list-section">
         <div className="tasks-header">
           <TaskSummary total={total} done={done} remaining={remaining} />
-
           {!isPast && (
             <TaskFilters currentFilter={filter} onFilterChange={setFilter} />
           )}
@@ -197,7 +199,7 @@ function App() {
           onDelete={deleteTask}
           onEdit={editTask}
           onChangePriority={changePriority}
-          onToggleScope={toggleScope} // ← прокидываем toggle
+          onToggleScope={toggleScope}
           isPast={isPast}
         />
       </section>

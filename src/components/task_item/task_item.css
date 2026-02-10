@@ -63,7 +63,7 @@
   flex-shrink: 0;
 }
 
-.complete-btn {
+.task-item .complete-btn {
   font-family: var(--font-family);
   font-size: 0.95rem;
   padding: 6px 12px;
@@ -75,11 +75,11 @@
   transition: all var(--transition-fast);
 }
 
-.complete-btn:hover {
+.task-item .complete-btn:hover {
   background: var(--color-success-soft);
 }
 
-.delete-btn {
+.task-item .delete-btn {
   font-family: var(--font-family);
   font-size: 1.3rem;
   width: 32px;
@@ -95,7 +95,7 @@
   transition: all var(--transition-fast);
 }
 
-.delete-btn:hover {
+.task-item .delete-btn:hover {
   background: var(--color-danger-soft);
 }
 
@@ -246,7 +246,6 @@
   display:flex;
   flex-direction: column-reverse;
   align-items:center;
-  justify-content:;
   gap: 2px;
 }
 
@@ -299,4 +298,10 @@
   font-size: 0.7rem;
   color: var(--color-text);
 
+}
+.task-completed-time {
+  font-size: 0.75rem;
+  color: var(--color-muted-2);
+  margin-left: auto;
+  padding-left: 8px;
 }

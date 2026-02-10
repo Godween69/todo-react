@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import TaskItem from "../task_item/task_item.jsx";
-import "../task_item/task_item.css"; // ← путь к CSS task_item
 
 export default function TaskList({
   tasks,
@@ -8,12 +7,14 @@ export default function TaskList({
   onDelete,
   onEdit,
   onChangePriority,
-  onToggleScope, // ← получаем прокиданный toggle
+  onToggleScope,
   isPast = false,
 }) {
   const [editingTaskId, setEditingTaskId] = useState(null);
 
   const safeTasks = Array.isArray(tasks) ? tasks : [];
+  const completedCount = safeTasks.filter((t) => t.isDone).length;
+  const firstCompletedIndex = safeTasks.findIndex((t) => t.isDone);
 
   if (safeTasks.length === 0) {
     return (
@@ -27,23 +28,29 @@ export default function TaskList({
 
   return (
     <div className="task-list">
-      {safeTasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          onToggle={onToggle}
-          onDelete={onDelete}
-          onEdit={(id, newText) => {
-            onEdit(id, newText);
-            setEditingTaskId(null);
-          }}
-          onChangePriority={onChangePriority}
-          onToggleScope={onToggleScope} // ← передаем toggle
-          isEditing={editingTaskId === task.id}
-          onEditStart={() => setEditingTaskId(task.id)}
-          onEditCancel={() => setEditingTaskId(null)}
-          isPast={isPast}
-        />
+      {safeTasks.map((task, idx) => (
+        <Fragment key={task.id}>
+          {completedCount > 0 && idx === firstCompletedIndex && (
+            <div className="completed-label">
+              Выполнено: {completedCount}
+            </div>
+          )}
+          <TaskItem
+            task={task}
+            onToggle={onToggle}
+            onDelete={onDelete}
+            onEdit={(id, newText) => {
+              onEdit(id, newText);
+              setEditingTaskId(null);
+            }}
+            onChangePriority={onChangePriority}
+            onToggleScope={onToggleScope}
+            isEditing={editingTaskId === task.id}
+            onEditStart={() => setEditingTaskId(task.id)}
+            onEditCancel={() => setEditingTaskId(null)}
+            isPast={isPast}
+          />
+        </Fragment>
       ))}
     </div>
   );
