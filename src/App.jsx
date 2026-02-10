@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import DateToday from "./components/date_today/date_today.jsx";
+import Clock from "./components/clock/clock.jsx";
 import TaskInput from "./components/task_input/task_input.jsx";
 import TaskList from "./components/task_list/task_list.jsx";
 import TaskSummary from "./components/task_summary/task_summary.jsx";
@@ -87,7 +88,7 @@ function App() {
           isDone: isNowDone,
           completedAt: isNowDone ? new Date().toISOString() : null,
         };
-      })
+      }),
     );
   };
 
@@ -98,13 +99,13 @@ function App() {
   const editTask = (id, newText) => {
     if (!newText.trim()) return;
     setTasksForCurrentDate((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, text: newText.trim() } : t))
+      prev.map((t) => (t.id === id ? { ...t, text: newText.trim() } : t)),
     );
   };
 
   const changePriority = (id, newPriority) => {
     setTasksForCurrentDate((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, priority: newPriority } : t))
+      prev.map((t) => (t.id === id ? { ...t, priority: newPriority } : t)),
     );
   };
 
@@ -113,8 +114,8 @@ function App() {
       prev.map((t) =>
         t.id === id
           ? { ...t, scope: t.scope === "global" ? "local" : "global" }
-          : t
-      )
+          : t,
+      ),
     );
   };
 
@@ -156,23 +157,18 @@ function App() {
               <span className="slogan">И твои планы под контролем!</span>
             </div>
           </div>
+          <Clock />
 
           <div className="right-part">
             <DateToday dateStr={currentDate} />
-            <DateNavigator
-              onChangeDate={changeDate}
-              onGoToToday={goToToday}
-            />
+            <DateNavigator onChangeDate={changeDate} onGoToToday={goToToday} />
           </div>
         </div>
       </header>
 
       <div className="date-block-mobile">
         <DateToday dateStr={currentDate} />
-        <DateNavigator
-          onChangeDate={changeDate}
-          onGoToToday={goToToday}
-        />
+        <DateNavigator onChangeDate={changeDate} onGoToToday={goToToday} />
       </div>
 
       <section className="input-section">

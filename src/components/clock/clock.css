@@ -1,0 +1,38 @@
+.clock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-accent);
+  padding: 10px;
+}
+
+.clock-time {
+  /* background: var(--color-surface-muted); */
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  /* border: 1px solid var(--color-border); */
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 720px) {
+  .clock {
+    font-size: 16px;
+  }
+
+  .clock-time {
+    padding: 4px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .clock {
+    font-size: 14px;
+  }
+
+  .clock-time {
+    padding: 3px 8px;
+  }
+}
